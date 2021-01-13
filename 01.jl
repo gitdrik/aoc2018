@@ -3,10 +3,9 @@ open("01.txt") do f
     println("Part 1: ", sum(ns))
 
     i, sm, sms = 1, 0, Set()
-    while true
-        sm += ns[i]
-        sm ∈ sms && break
+    while sm ∉ sms
         push!(sms, sm)
+        sm += ns[i]
         i = mod1(i+1, length(ns))
     end
     println("Part 2: ", sm)

@@ -10,12 +10,5 @@ open("03.txt") do f
         push!(claims, (xr, yr))
     end
     println("Part 1: ", sum(fabric .> 1))
-
     println("Part 2: ", findfirst(c->all(fabric[c...] .== 1), claims))
-#    for (i, c) ∈ enumerate(claims)
-#        if all(fabric[c...] .== 1)
-#            println("Part 2: ", i)
-#            break
-#        end
-#    end
 end

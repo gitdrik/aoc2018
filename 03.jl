@@ -4,8 +4,8 @@ open("03.txt") do f
     for l ∈ eachline(f)
         ss = split(split(l,"@ ")[2], ": ")
         x, y = parse.(Int, split(ss[1], ","))
-        b, h = parse.(Int, split(ss[2], "x"))
-        claim = (x+1:x+b, y+1:y+h)
+        w, h = parse.(Int, split(ss[2], "x"))
+        claim = (x+1:x+w, y+1:y+h)
         fabric[claim...] .+= 1
         push!(claims, claim)
     end

@@ -1,39 +1,34 @@
 open("08.txt") do f
     ns = parse.(Int, split(readline(f)))
+    ns2 = deepcopy(ns)
 
-    function metasum(ns)
-        nodes, metas = ns[1:2]
-        ns = ns[3:end]
+    function metasum!(ns)
+        nodes, metas = [popfirst!(ns) for _ ∈ 1:2]
         ms = 0
         for _ ∈ 1:nodes
-            s, ns = metasum(ns)
-            ms += s
+            ms += metasum!(ns)
         end
-        ms += sum(ns[1:metas])
-        ns = ns[1+metas:end]
-        return ms, ns
+        ms += sum([popfirst!(ns) for _ ∈ 1:metas])
+        return ms
     end
-    println("Part 1: ", metasum(ns)[1])
+    println("Part 1: ", metasum!(ns))
 
-    function nodevalue(ns)
-        nodes, metas = ns[1:2]
-        ns = ns[3:end]
+    function nodevalue!(ns)
+        nodes, metas = [popfirst!(ns) for _ ∈ 1:2]
         vs = []
         for _ ∈ 1:nodes
-            v, ns = nodevalue(ns)
-            push!(vs, v)
+            push!(vs, nodevalue!(ns))
         end
         if isempty(vs)
-            value = sum(ns[1:metas])
+            value = sum([popfirst!(ns) for _ ∈ 1:metas])
         else
             value = 0
-            for m ∈ ns[1:metas]
-                m ∉ 1:length(vs) && continue
+            for m ∈ [popfirst!(ns) for _ ∈ 1:metas]
+                m ∉ axes(vs,1) && continue
                 value += vs[m]
             end
         end
-        ns = ns[1+metas:end]
-        return value, ns
+        return value
     end
-    println("Part 2: ", nodevalue(ns)[1])
+    println("Part 2: ", nodevalue!(ns2))
 end

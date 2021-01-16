@@ -24,7 +24,7 @@ open("08.txt") do f
         else
             value = 0
             for m ∈ [popfirst!(ns) for _ ∈ 1:metas]
-                m ∉ axes(vs,1) && continue
+                m ∉ eachindex(vs) && continue
                 value += vs[m]
             end
         end

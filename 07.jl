@@ -27,7 +27,7 @@ open("07.txt") do f
     dones = OrderedSet{Char}()
     ws = [[0,'@'],[0,'@'],[0,'@'],[0,'@'],[0,'@']]
     for t ∈ Iterators.countfrom(1)
-        predones = Set{Char}()
+        predones = []
         for i ∈ 1:5
             if ws[i][1]==0 && !isempty(nexts)
                 c = pop!(nexts)

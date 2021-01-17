@@ -22,7 +22,6 @@ open("09.txt") do f
                 ring[after][1] = before
                 current = after
             end
-
         end
         maximum(scores)
     end

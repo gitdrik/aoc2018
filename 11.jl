@@ -14,9 +14,9 @@ function maxs(sn, szr)
     fc = fuelcells(sn)
     mx, my, msz, ms = 0, 0, 0, -50
     for sz ∈ szr, x ∈ 1:size(fc,1)+1-sz, y ∈ 1:size(fc,2)+1-sz
-        mc = sum(fc[x:x+sz-1, y:y+sz-1])
-        if mc > ms
-            mx, my, msz, ms = x, y, sz, mc
+        s = sum(fc[x:x+sz-1, y:y+sz-1])
+        if s > ms
+            mx, my, msz, ms = x, y, sz, s
         end
     end
     return mx, my, msz

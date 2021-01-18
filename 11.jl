@@ -10,16 +10,16 @@ function fuelcells(sn)
     return fc
 end
 
-function maxs(sn, sr)
+function maxs(sn, szr)
     fc = fuelcells(sn)
-    mx, my, ms, m = 0, 0, 0, -50
-    for s ∈ sr, x ∈ 1:size(fc,1)+1-s, y ∈ 1:size(fc,2)+1-s
-        mc = sum(fc[x:x+s-1, y:y+s-1])
-        if mc > m
-            mx, my, ms, m = x, y, s, mc
+    mx, my, msz, ms = 0, 0, 0, -50
+    for sz ∈ szr, x ∈ 1:size(fc,1)+1-sz, y ∈ 1:size(fc,2)+1-sz
+        mc = sum(fc[x:x+sz-1, y:y+sz-1])
+        if mc > ms
+            mx, my, msz, ms = x, y, sz, mc
         end
     end
-    return mx, my, ms
+    return mx, my, msz
 end
 println("Part 1: ", join(maxs(7400, 3:3)[1:2],','))
 println("Part 2: ", join(maxs(7400, 3:30),','))

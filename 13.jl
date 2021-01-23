@@ -1,5 +1,4 @@
 using DataStructures
-
 open("13.txt") do f
     ls = readlines(f)
     carts = SortedSet{Tuple{Int, Int, Tuple{Int, Int},Int}}()

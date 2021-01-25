@@ -1,4 +1,4 @@
-function score(practicerounds)
+function scoresafter(practicerounds)
     scores, e1, e2 = [3, 7], 1, 2
     while length(scores) < practicerounds+10
         push!(scores, reverse(digits(scores[e1]+scores[e2]))...)
@@ -7,7 +7,7 @@ function score(practicerounds)
     end
     return join(scores[practicerounds+1:practicerounds+10])
 end
-println("Part 1: ", score(540561))
+println("Part 1: ", scoresafter(540561))
 
 function scoresbefore(sequence)
     scores, e1, e2 = [3, 7], 1, 2

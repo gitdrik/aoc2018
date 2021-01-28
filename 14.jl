@@ -1,11 +1,11 @@
 function scoresafter(practicerounds)
     scores, e1, e2 = [3, 7], 1, 2
-    while length(scores) < practicerounds+10
+    while true
         push!(scores, reverse(digits(scores[e1]+scores[e2]))...)
         e1 = mod1(e1+scores[e1]+1, length(scores))
         e2 = mod1(e2+scores[e2]+1, length(scores))
+        length(scores) ≥ practicerounds+10 && return join(scores[practicerounds+1:practicerounds+10])
     end
-    return join(scores[practicerounds+1:practicerounds+10])
 end
 println("Part 1: ", scoresafter(540561))
 

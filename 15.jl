@@ -36,7 +36,7 @@ open("15.txt") do f
             foes[(i, j)] = hp-power
         else
             delete!(foes, (i, j))
-            players = setdiff(players, [(i,j)])
+            filter!(!=((i,j)), players)
         end
         return players, foes
     end

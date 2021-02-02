@@ -41,7 +41,7 @@ open("15.txt") do f
         return players, foes
     end
 
-    function play(es, gs, cave)
+    function play!(es, gs, cave, elfpower)
         turns = 0
         while !isempty(gs) && !isempty(es)
             players = sort(collect(keys(es) ∪ keys(gs)))
@@ -54,7 +54,7 @@ open("15.txt") do f
                 end
                 if p ∈ keys(es)
                     p, es = move(p, es, gs, cave)
-                    players, gs = attack(p, gs, players, 3)
+                    players, gs = attack(p, gs, players, elfpower)
                 elseif p ∈ keys(gs)
                     p, gs = move(p, gs, es, cave)
                     players, es = attack(p, es, players, 3)
@@ -64,34 +64,13 @@ open("15.txt") do f
         end
         return turns * (sum(values(gs)) + sum(values(es)))
     end
-    println("Part 1: ", play(es, gs, cave))
+    println("Part 1: ", play!(es, gs, cave, 3))
 
-    function play2(es, gs, cave)
-        for elfpower ∈ Iterators.countfrom(4)
-            turns = 0
-            while !isempty(gs) && !isempty(es)
-                players = sort(collect(keys(es) ∪ keys(gs)))
-                fullturn = true
-                while !isempty(players)
-                    if (isempty(gs) || isempty(es))
-                        fullturn = false
-                        break
-                    end
-                    p = popfirst!(players)
-                    if p ∈ keys(es)
-                        p, es = move(p, es, gs, cave)
-                        players, gs = attack(p, gs, players, elfpower)
-                    elseif p ∈ keys(gs)
-                        p, gs = move(p, gs, es, cave)
-                        players, es = attack(p, es, players, 3)
-                    end
-                end
-                turns += fullturn
-            end
-            length(es)==length(oes) && return turns * (sum(values(gs)) + sum(values(es)))
-            es, gs = deepcopy(oes), deepcopy(ogs)
-        end
+    outcome = 0
+    for elfpower ∈ Iterators.countfrom(4)
+        es, gs = deepcopy(oes), deepcopy(ogs)
+        outcome = play!(es, gs, cave, elfpower)
+        length(es)==length(oes) && break
     end
-    es, gs = deepcopy(oes), deepcopy(ogs)
-    println("Part 2: ", play2(es, gs, cave))
+    println("Part 2: ", outcome)
 end

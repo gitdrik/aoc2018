@@ -12,107 +12,46 @@ open("16.txt") do f
         end
     end
 
-    function addr(a, b, c, r)
+    function op(a, b, c, r, expr)
         regs = copy(r)
-        regs[c+1] = regs[a+1] + regs[b+1]
+        regs[c+1] = expr
         return regs
     end
-    function addi(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = regs[a+1] + b
-        return regs
-    end
-    function mulr(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = regs[a+1] * regs[b+1]
-        return regs
-    end
-    function muli(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = regs[a+1] * b
-        return regs
-    end
-    function banr(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = regs[a+1] & regs[b+1]
-        return regs
-    end
-    function bani(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = regs[a+1] & b
-        return regs
-    end
-    function borr(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = regs[a+1] | regs[b+1]
-        return regs
-    end
-    function bori(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = regs[a+1] | b
-        return regs
-    end
-    function setr(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = regs[a+1]
-        return regs
-    end
-    function seti(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = a
-        return regs
-    end
-    function gtir(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = a > regs[b+1]
-        return regs
-    end
-    function gtri(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = regs[a+1] > b
-        return regs
-    end
-    function gtrr(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = regs[a+1] > regs[b+1]
-        return regs
-    end
-    function eqir(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = a==regs[b+1]
-        return regs
-    end
-    function eqri(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = regs[a+1]==b
-        return regs
-    end
-    function eqrr(a, b, c, r)
-        regs = copy(r)
-        regs[c+1] = regs[a+1]==regs[b+1]
-        return regs
-    end
+    ops = [(a, b, c, r) -> op(a, b, c, r, r[a+1] + r[b+1]),
+           (a, b, c, r) -> op(a, b, c, r, r[a+1] + b),
+           (a, b, c, r) -> op(a, b, c, r, r[a+1] * r[b+1]),
+           (a, b, c, r) -> op(a, b, c, r, r[a+1] * b),
+           (a, b, c, r) -> op(a, b, c, r, r[a+1] & r[b+1]),
+           (a, b, c, r) -> op(a, b, c, r, r[a+1] & b),
+           (a, b, c, r) -> op(a, b, c, r, r[a+1] | r[b+1]),
+           (a, b, c, r) -> op(a, b, c, r, r[a+1] | b),
+           (a, b, c, r) -> op(a, b, c, r, r[a+1]),
+           (a, b, c, r) -> op(a, b, c, r, a),
+           (a, b, c, r) -> op(a, b, c, r, a > r[b+1]),
+           (a, b, c, r) -> op(a, b, c, r, r[a+1] > b),
+           (a, b, c, r) -> op(a, b, c, r, r[a+1] > r[b+1]),
+           (a, b, c, r) -> op(a, b, c, r, a==r[b+1]),
+           (a, b, c, r) -> op(a, b, c, r, r[a+1]==b),
+           (a, b, c, r) -> op(a, b, c, r, r[a+1]==r[b+1])]
 
-    funcs = [addr, addi, mulr, muli, banr, bani, borr, bori, setr, seti, gtir, gtri, gtrr, eqir, eqri, eqrr]
-    fcomp(before, cmd, after, funcs) = [f(cmd[2],cmd[3],cmd[4],before)==after for f ∈ funcs]
-    threeormore = sum([sum(fcomp(befores[i], cmds[i], afters[i], funcs)) ≥ 3  for i ∈ 1:length(cmds)])
-    println("Part 1: ", threeormore)
+    opmatch(before, cmd, after, ops) = [f(cmd[2],cmd[3],cmd[4],before)==after for f ∈ ops]
+    opmatches = [opmatch(b, c, a, ops) for (b, c, a) ∈ zip(befores, cmds, afters)]
+    println("Part 1: ", sum(sum.(opmatches) .≥ 3))
 
     fdict, i = Dict{Int,Int}(), 1
     while true
-        c = fcomp(befores[i], cmds[i], afters[i], funcs)
-        founds = findall(c)
-        unfounds = setdiff(founds, values(fdict))
-        if length(unfounds)==1
-            fdict[cmds[i][1]] = unfounds[1]
+        matches = opmatches[i]
+        unmatched = setdiff(findall(matches), values(fdict))
+        if length(unmatched)==1
+            fdict[cmds[i][1]] = unmatched[1]
             length(fdict)==16 && break
         end
         i = mod1(i+1, length(cmds))
     end
-    pgm = [parse.(Int, split(l)) for l ∈ ls[3131:end]]
+    cmds = [parse.(Int, split(l)) for l ∈ ls[3131:end]]
     regs = zeros(Int, 4)
-    for p ∈ pgm
-        regs = funcs[fdict[p[1]]](p[2], p[3], p[4], regs)
+    for c ∈ cmds
+        regs = ops[fdict[c[1]]](c[2], c[3], c[4], regs)
     end
     println("Part 2: ", regs[1])
 end

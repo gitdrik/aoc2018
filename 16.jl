@@ -40,8 +40,7 @@ open("16.txt") do f
 
     fdict, i = Dict{Int,Int}(), 1
     while true
-        matches = opmatches[i]
-        unmatched = setdiff(findall(matches), values(fdict))
+        unmatched = setdiff(findall(opmatches[i]), values(fdict))
         if length(unmatched)==1
             fdict[cmds[i][1]] = unmatched[1]
             length(fdict)==16 && break

@@ -12,27 +12,27 @@ open("16.txt") do f
         end
     end
 
-    function op(a, b, c, r, expr)
+    function op(c, r, expr)
         regs = copy(r)
         regs[c+1] = expr
         return regs
     end
-    ops = [(a, b, c, r) -> op(a, b, c, r, r[a+1] + r[b+1]),
-           (a, b, c, r) -> op(a, b, c, r, r[a+1] + b),
-           (a, b, c, r) -> op(a, b, c, r, r[a+1] * r[b+1]),
-           (a, b, c, r) -> op(a, b, c, r, r[a+1] * b),
-           (a, b, c, r) -> op(a, b, c, r, r[a+1] & r[b+1]),
-           (a, b, c, r) -> op(a, b, c, r, r[a+1] & b),
-           (a, b, c, r) -> op(a, b, c, r, r[a+1] | r[b+1]),
-           (a, b, c, r) -> op(a, b, c, r, r[a+1] | b),
-           (a, b, c, r) -> op(a, b, c, r, r[a+1]),
-           (a, b, c, r) -> op(a, b, c, r, a),
-           (a, b, c, r) -> op(a, b, c, r, a > r[b+1]),
-           (a, b, c, r) -> op(a, b, c, r, r[a+1] > b),
-           (a, b, c, r) -> op(a, b, c, r, r[a+1] > r[b+1]),
-           (a, b, c, r) -> op(a, b, c, r, a==r[b+1]),
-           (a, b, c, r) -> op(a, b, c, r, r[a+1]==b),
-           (a, b, c, r) -> op(a, b, c, r, r[a+1]==r[b+1])]
+    ops = [(a, b, c, r) -> op(c, r, r[a+1] + r[b+1]),
+           (a, b, c, r) -> op(c, r, r[a+1] + b),
+           (a, b, c, r) -> op(c, r, r[a+1] * r[b+1]),
+           (a, b, c, r) -> op(c, r, r[a+1] * b),
+           (a, b, c, r) -> op(c, r, r[a+1] & r[b+1]),
+           (a, b, c, r) -> op(c, r, r[a+1] & b),
+           (a, b, c, r) -> op(c, r, r[a+1] | r[b+1]),
+           (a, b, c, r) -> op(c, r, r[a+1] | b),
+           (a, b, c, r) -> op(c, r, r[a+1]),
+           (a, b, c, r) -> op(c, r, a),
+           (a, b, c, r) -> op(c, r, a > r[b+1]),
+           (a, b, c, r) -> op(c, r, r[a+1] > b),
+           (a, b, c, r) -> op(c, r, r[a+1] > r[b+1]),
+           (a, b, c, r) -> op(c, r, a==r[b+1]),
+           (a, b, c, r) -> op(c, r, r[a+1]==b),
+           (a, b, c, r) -> op(c, r, r[a+1]==r[b+1])]
 
     opmatch(before, cmd, after, ops) = [f(cmd[2],cmd[3],cmd[4],before)==after for f ∈ ops]
     opmatches = [opmatch(b, c, a, ops) for (b, c, a) ∈ zip(befores, cmds, afters)]

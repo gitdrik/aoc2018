@@ -1,14 +1,14 @@
 open("16.txt") do f
     ls = readlines(f)
-    befores, cmds, afters = [], [], []
+    befs, cmds, afts = [], [], []
     for l in ls[1:3130]
         isempty(l) && continue
         if l[1] ∈ '0':'9'
             push!(cmds, [parse(Int, s) for s in split(l)])
         elseif l[1:9]=="Before: ["
-            push!(befores, [parse(Int, s) for s in split(l[10:19], ',')])
+            push!(befs, [parse(Int, s) for s in split(l[10:19], ',')])
         elseif l[1:9]=="After:  ["
-            push!(afters, [parse(Int, s) for s in split(l[10:19], ',')])
+            push!(afts, [parse(Int, s) for s in split(l[10:19], ',')])
         end
     end
 
@@ -34,8 +34,8 @@ open("16.txt") do f
            (a, b, c, r) -> op(c, r, r[a+1]==b),
            (a, b, c, r) -> op(c, r, r[a+1]==r[b+1])]
 
-    opmatch(before, cmd, after, ops) = [f(cmd[2],cmd[3],cmd[4],before)==after for f ∈ ops]
-    opmatches = [opmatch(b, c, a, ops) for (b, c, a) ∈ zip(befores, cmds, afters)]
+    opmatch(bef, cmd, aft, ops) = [f(cmd[2], cmd[3], cmd[4], bef)==aft for f ∈ ops]
+    opmatches = [opmatch(b, c, a, ops) for (b, c, a) ∈ zip(befs, cmds, afts)]
     println("Part 1: ", sum(sum.(opmatches) .≥ 3))
 
     fdict, i = Dict{Int,Int}(), 1

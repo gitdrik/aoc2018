@@ -38,14 +38,13 @@ open("16.txt") do f
     opmatches = [opmatch(b, c, a, ops) for (b, c, a) ∈ zip(befs, cmds, afts)]
     println("Part 1: ", sum(sum.(opmatches) .≥ 3))
 
-    fdict, i = Dict{Int,Int}(), 1
+    fdict, i = Dict{Int,Int}(), 0
     while true
-        unmatched = setdiff(findall(opmatches[i]), values(fdict))
-        if length(unmatched)==1
-            fdict[cmds[i][1]] = unmatched[1]
-            length(fdict)==16 && break
-        end
         i = mod1(i+1, length(cmds))
+        unmatched = setdiff(findall(opmatches[i]), values(fdict))
+        length(unmatched) ≠ 1 && continue
+        fdict[cmds[i][1]] = unmatched[1]
+        length(fdict)==16 && break
     end
     cmds = [parse.(Int, split(l)) for l ∈ ls[3131:end]]
     regs = zeros(Int, 4)

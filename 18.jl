@@ -36,7 +36,6 @@ open("18.txt") do f
             push!(areas, area)
         end
     end
-
     t2 = 1000000000
     t2e = cyclestart + mod(t2-cyclestart, cyclelength)
     println("Part 2: ", sum(areas[t2e].==1) * sum(areas[t2e].==2))

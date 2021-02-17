@@ -15,13 +15,10 @@ open("20.txt") do f
                 for j ∈ i+1:length(cs)
                     depth += cs[j] == '('
                     if depth == 0
-                        if cs[j] == '|'
+                        if cs[j] ∈ ['|', ')']
                             push!(forks, start:j-1)
                             start = j+1
-                        elseif cs[j] == ')'
-                            push!(forks, start:j-1)
-                            start = j+1
-                            break
+                            cs[j] == ')' && break
                         end
                     end
                     depth -= cs[j] == ')'

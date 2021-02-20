@@ -1,0 +1,33 @@
+#ip 2
+00: seti 123 0 4          r4 = 123
+01: bani 4 456 4          r4 = r4 & 456 (=72)
+02: eqri 4 72 4           r4 = r4==72
+03: addr 4 2 2            r2 = r4+r2 (skip next instruction if last was true)
+04: seti 0 0 2
+-- end of diagnostics
+05: seti 0 7 4            r4 = 0
+06: bori 4 65536 3        r3 = r4 | 65536
+07: seti 10283511 1 4     r4 = 10283511
+08: bani 3 255 1          r1 = r3 & 255 (=0)
+09: addr 4 1 4            r4 = r4 + r1
+10: bani 4 16777215 4     r4 = r4 & 16777215 (2^24-1)
+11: muli 4 65899 4        r4 = r4 * 65899
+12: bani 4 16777215 4     r4 = r4 & 16777215 (2^24-1)
+13: gtir 256 3 1          r1 = 256 > r3 |
+14: addr 1 2 2            r2 = r1 + r2  |(skip next inst if r3 < 256)
+15: addi 2 1 2            r2 = r2 + 1   |(skip next instruction)
+16: seti 27 8 2           r2 = 27       L(goto 28 if r3 < 256)
+17: seti 0 1 1            r1 = 0
+18: addi 1 1 5            r5 = r1 + 1
+19: muli 5 256 5          r5 = r5 * 256
+20: gtrr 5 3 5            r5 = r5 > r3  |
+21: addr 5 2 2            r2 = r5 + r2  |(skip next if r5 > r3)
+22: addi 2 1 2            r2 = r2 + 1   |(skip next)
+23: seti 25 3 2           r2 = 25       L(goto 26 if r5 > r3)
+24: addi 1 1 1            r1 = r1 + 1
+25: seti 17 0 2           r2 = 17        (goto 18)
+26: setr 1 4 3            r3 = r1
+27: seti 7 6 2            r2 = 7         (goto 8)
+28: eqrr 4 0 1            r1 = r4==r0    |
+29: addr 1 2 2            r2 = r2 + r1   | (end if r4==r0)
+30: seti 5 2 2            r2 = 5         L (goto 6 if r4 ≠ r0)

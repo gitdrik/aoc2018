@@ -28,8 +28,8 @@ end
     # Slow walk from zero towards weighted average of invisibles
     # after removing outlers. About 100 times slower, but worked.
     bots = bots[length.(intersections).>900]
-    pos, invisible = [0,0,0], 1000
-    while invisible > 0
+    pos = [0,0,0]
+    while true
         invisible, divisor, avgdist = 0, 0, [0, 0, 0]
         for b ∈ bots
             delta = b[2:4].-pos

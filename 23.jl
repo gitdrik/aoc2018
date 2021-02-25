@@ -12,23 +12,21 @@ open("23.txt") do f
     n = sum([sum(abs.(bmax[2:4].-b[2:4])) ≤ bmax[1] for b ∈ bots])
     println("Part 1: ", n)
 
-    intersections = [Set{Int}() for _ ∈ eachindex(bots)]
-    for i ∈ 1:length(bots), j ∈ i:length(bots)
-        if sum(abs.(bots[i][2:4].-bots[j][2:4])) ≤ bots[i][1]+bots[j][1]
-            push!(intersections[i], j)
-            push!(intersections[j], i)
-        end
+    intersections = zeros(Int, length(bots))
+    for i ∈ 1:length(bots), j ∈ i+1:length(bots)
+        sum(abs.(bots[i][2:4].-bots[j][2:4])) > bots[i][1]+bots[j][1] && continue
+        intersections[i] += 1
+        intersections[j] += 1
     end
     # remove outliers; remaining signal radii all intersect
-    dists = dists[length.(intersections).>900]
+    dists = dists[intersections .> 900]
     println("Part 2: ", minimum(∩(dists...)))
 end
 
-#=  # Alternative ending.
-    # Slow walk from zero towards weighted average of invisibles
-    # after removing outlers. About 100 times slower, but worked.
-    bots = bots[length.(intersections).>900]
-    pos = [0,0,0]
+#=  # Alternative ending, the one that gave me the star.
+    # Slow walk from zero towards weighted average of invisibles.
+    bots = bots[intersections .> 900]
+    pos = [0, 0, 0]
     while true
         invisible, divisor, avgdist = 0, 0, [0, 0, 0]
         for b ∈ bots
@@ -43,4 +41,4 @@ end
         pos += round.(Int, invisible * 1e-7 .* avgdist ./ divisor)
     end
     println("Part 2: ", sum(pos), " @ ", pos)
-end  =#
+end  ==#
